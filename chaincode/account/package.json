@@ -1,0 +1,11 @@
+{
+  "name": "account",
+  "main": "index.js",
+  "scripts": {
+    "start": "fabric-chaincode-node start"
+  },
+  "dependencies": {
+    "fabric-contract-api": "^1.4.2",
+    "fabric-shim": "^1.4.2"
+  }
+}

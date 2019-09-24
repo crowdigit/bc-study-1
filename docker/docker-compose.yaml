@@ -118,8 +118,8 @@ services:
     environment:
       - FABRIC_CA_HOME=/srv/ca
       - FABRIC_CA_SERVER_CA_NAME=ca.abc.com
-      - FABRIC_CA_SERVER_CA_CERTFILE=/srv/ca/key
-      - FABRIC_CA_SERVER_CA_KEYFILE=/srv/ca/cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/srv/ca/key
+      - FABRIC_CA_SERVER_CA_CERTFILE=/srv/ca/cert.pem
     volumes:
       - ./fabric-ca-server-config.yaml:/srv/ca/fabric-ca-server-config.yaml
       - ../crypto/peerOrganizations/abc.com/ca/8c5abf08907d60200e427b43bd419a3b78e5853b1c0b0e532157cce901c6f4ac_sk:/srv/ca/key
@@ -133,6 +133,7 @@ services:
     volumes:
       - ../crypto/peerOrganizations/abc.com/users/Admin@abc.com:/srv/msp
       - ../artifact:/srv/artifact
+      - ../chaincode:/opt/gopath/src/chaincode
     environment:
       - CORE_PEER_ADDRESS=p0.abc.com:7051
       - CORE_PEER_LOCALMSPID=ABCOrg
@@ -147,6 +148,7 @@ services:
     volumes:
       - ../crypto/peerOrganizations/abc.com/peers/p0.abc.com:/srv/msp
       - ./core.yaml:/etc/hyperledger/fabric/core.yaml
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - CORE_PEER_ID=p0.abc.com
       - CORE_PEER_NETWORKID=uwu
@@ -165,6 +167,7 @@ services:
     volumes:
       - ../crypto/peerOrganizations/abc.com/peers/p1.abc.com:/srv/msp
       - ./core.yaml:/etc/hyperledger/fabric/core.yaml
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - CORE_PEER_ID=p1.abc.com
       - CORE_PEER_NETWORKID=uwu
@@ -183,8 +186,8 @@ services:
     environment:
       - FABRIC_CA_HOME=/srv/ca
       - FABRIC_CA_SERVER_CA_NAME=ca.xyz.com
-      - FABRIC_CA_SERVER_CA_CERTFILE=/srv/ca/key
-      - FABRIC_CA_SERVER_CA_KEYFILE=/srv/ca/cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/srv/ca/key
+      - FABRIC_CA_SERVER_CA_CERTFILE=/srv/ca/cert.pem
     volumes:
       - ./fabric-ca-server-config.yaml:/srv/ca/fabric-ca-server-config.yaml
       - ../crypto/peerOrganizations/xyz.com/ca/3c323e799a33e4210dee67713e3fd091488f85332e70700b89e581f97c0150c2_sk:/srv/ca/key
@@ -198,6 +201,7 @@ services:
     volumes:
       - ../crypto/peerOrganizations/xyz.com/users/Admin@xyz.com:/srv/msp
       - ../artifact:/srv/artifact
+      - ../chaincode:/opt/gopath/src/chaincode
     environment:
       - CORE_PEER_ADDRESS=p0.xyz.com:7051
       - CORE_PEER_LOCALMSPID=XYZOrg
@@ -212,6 +216,7 @@ services:
     volumes:
       - ../crypto/peerOrganizations/xyz.com/peers/p0.xyz.com:/srv/msp
       - ./core.yaml:/etc/hyperledger/fabric/core.yaml
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - CORE_PEER_ID=p0.xyz.com
       - CORE_PEER_NETWORKID=uwu
@@ -230,6 +235,7 @@ services:
     volumes:
       - ../crypto/peerOrganizations/xyz.com/peers/p1.xyz.com:/srv/msp
       - ./core.yaml:/etc/hyperledger/fabric/core.yaml
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - CORE_PEER_ID=p1.xyz.com
       - CORE_PEER_NETWORKID=uwu
@@ -248,8 +254,8 @@ services:
     environment:
       - FABRIC_CA_HOME=/srv/ca
       - FABRIC_CA_SERVER_CA_NAME=ca.ijk.com
-      - FABRIC_CA_SERVER_CA_CERTFILE=/srv/ca/key
-      - FABRIC_CA_SERVER_CA_KEYFILE=/srv/ca/cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/srv/ca/key
+      - FABRIC_CA_SERVER_CA_CERTFILE=/srv/ca/cert.pem
     volumes:
       - ./fabric-ca-server-config.yaml:/srv/ca/fabric-ca-server-config.yaml
       - ../crypto/peerOrganizations/ijk.com/ca/dc8c8a09b0b2700158cb7c1a5cde61b14e61b3b7ae1208bf7dee07c8185fd3ac_sk:/srv/ca/key
@@ -263,6 +269,7 @@ services:
     volumes:
       - ../crypto/peerOrganizations/ijk.com/users/Admin@ijk.com:/srv/msp
       - ../artifact:/srv/artifact
+      - ../chaincode:/opt/gopath/src/chaincode
     environment:
       - CORE_PEER_ADDRESS=p0.ijk.com:7051
       - CORE_PEER_LOCALMSPID=IJKOrg
@@ -277,6 +284,7 @@ services:
     volumes:
       - ../crypto/peerOrganizations/ijk.com/peers/p0.ijk.com:/srv/msp
       - ./core.yaml:/etc/hyperledger/fabric/core.yaml
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - CORE_PEER_ID=p0.ijk.com
       - CORE_PEER_NETWORKID=uwu
