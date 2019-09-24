@@ -1,0 +1,48 @@
+version: "3.7"
+
+services:
+  ca.abc.org:
+    container_name: ca.abc.org
+    image: hyperledger/fabric-ca:${HYPERLEDGER_VERSION}
+    # networks:
+      # - lecturen
+    volumes:
+      - ../crypto/peerOrganizations/abc.com/ca/ca.abc.com-cert.pem:/srv/ca/ca-cert.pem
+      - ../crypto/peerOrganizations/abc.com/ca/8c5abf08907d60200e427b43bd419a3b78e5853b1c0b0e532157cce901c6f4ac_sk:/srv/ca/ca-key.pem
+      - ./fabric-ca-server-config.yaml:/srv/ca/fabric-ca-server-config.yaml
+    environment:
+      - FABRIC_CA_HOME=/srv/ca
+    command: fabric-ca-server start -b abc_admin:abc_password
+
+  ca.xyz.org:
+    container_name: ca.xyz.org
+    image: hyperledger/fabric-ca:${HYPERLEDGER_VERSION}
+    # networks:
+      # - lecturen
+    volumes:
+      - ../crypto/peerOrganizations/xyz.com/ca/ca.xyz.com-cert.pem:/srv/ca/ca-cert.pem
+      - ../crypto/peerOrganizations/xyz.com/ca/3c323e799a33e4210dee67713e3fd091488f85332e70700b89e581f97c0150c2_sk:/srv/ca/ca-key.pem
+      - ./fabric-ca-server-config.yaml:/srv/ca/fabric-ca-server-config.yaml
+    environment:
+      - FABRIC_CA_HOME=/srv/ca
+    command: fabric-ca-server start -b xyz_admin:xyz_password
+
+  ca.ijk.org:
+    container_name: ca.ijk.org
+    image: hyperledger/fabric-ca:${HYPERLEDGER_VERSION}
+    # networks:
+      # - lecturen
+    volumes:
+      - ../crypto/peerOrganizations/ijk.com/ca/ca.ijk.com-cert.pem:/srv/ca/ca-cert.pem
+      - ../crypto/peerOrganizations/ijk.com/ca/dc8c8a09b0b2700158cb7c1a5cde61b14e61b3b7ae1208bf7dee07c8185fd3ac_sk:/srv/ca/ca-key.pem
+      - ./fabric-ca-server-config.yaml:/srv/ca/fabric-ca-server-config.yaml
+    environment:
+      - FABRIC_CA_HOME=/srv/ca
+    command: fabric-ca-server start -b ijk_admin:ijk_password
+
+  application:
+    container_name: application
+    image: application:1.0.0
+    volumes:
+      - ./application/src:/srv/application
+      - ../crypto:/srv/application/crypto

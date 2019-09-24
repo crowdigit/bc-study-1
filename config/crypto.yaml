@@ -1,0 +1,36 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+OrdererOrgs:
+  - Name: FooOrg
+    Domain: foo.org
+    Template:
+      Count: 2
+      Hostname: o{{.Index}}
+
+PeerOrgs:
+  - Name: ABCOrg
+    Domain: abc.com
+    Template:
+      Count: 2
+      Hostname: p{{.Index}}
+    Users:
+      Count: 1
+
+  - Name: XYZOrg
+    Domain: xyz.com
+    Template:
+      Count: 2
+      Hostname: p{{.Index}}
+    Users:
+      Count: 1
+
+  - Name: IJKOrg
+    Domain: ijk.com
+    Template:
+      Count: 2
+      Hostname: p{{.Index}}
+    Users:
+      Count: 1

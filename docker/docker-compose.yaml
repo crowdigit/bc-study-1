@@ -1,0 +1,325 @@
+version: "3.7"
+
+networks:
+  lecturen:
+
+services:
+  z0.foo.org:
+    container_name: z0.foo.org
+    image: hyperledger/fabric-zookeeper:${THIRDPARTY_VERSION}
+    networks:
+      - lecturen
+    volumes:
+      - ./zoo.cfg:/conf/zoo.cfg
+    environment:
+      - ZOO_MY_ID=1
+
+  z1.foo.org:
+    container_name: z1.foo.org
+    image: hyperledger/fabric-zookeeper:${THIRDPARTY_VERSION}
+    networks:
+      - lecturen
+    volumes:
+      - ./zoo.cfg:/conf/zoo.cfg
+    environment:
+      - ZOO_MY_ID=2
+
+  z2.foo.org:
+    container_name: z2.foo.org
+    image: hyperledger/fabric-zookeeper:${THIRDPARTY_VERSION}
+    networks:
+      - lecturen
+    volumes:
+      - ./zoo.cfg:/conf/zoo.cfg
+    environment:
+      - ZOO_MY_ID=3
+
+  k0.foo.org:
+    container_name: k0.foo.org
+    image: hyperledger/fabric-kafka:${THIRDPARTY_VERSION}
+    networks:
+      - lecturen
+    environment:
+      - KAFKA_BROKER_ID=0
+      - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
+      - KAFKA_MIN_INSYNC_REPLICAS=2
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=3
+      - KAFKA_MESSAGE_MAX_BYTES=11530000
+      - KAFKA_REPLICA_FETCH_MAX_BYTES=11530000
+      - KAFKA_ZOOKEEPER_CONNECT=z0.foo.org:2181,z1.foo.org:2181,z2.foo.org:2181
+
+  k1.foo.org:
+    container_name: k1.foo.org
+    image: hyperledger/fabric-kafka:${THIRDPARTY_VERSION}
+    networks:
+      - lecturen
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
+      - KAFKA_MIN_INSYNC_REPLICAS=2
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=3
+      - KAFKA_MESSAGE_MAX_BYTES=11530000
+      - KAFKA_REPLICA_FETCH_MAX_BYTES=11530000
+      - KAFKA_ZOOKEEPER_CONNECT=z0.foo.org:2181,z1.foo.org:2181,z2.foo.org:2181
+
+  k2.foo.org:
+    container_name: k2.foo.org
+    image: hyperledger/fabric-kafka:${THIRDPARTY_VERSION}
+    networks:
+      - lecturen
+    environment:
+      - KAFKA_BROKER_ID=2
+      - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
+      - KAFKA_MIN_INSYNC_REPLICAS=2
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=3
+      - KAFKA_MESSAGE_MAX_BYTES=11530000
+      - KAFKA_REPLICA_FETCH_MAX_BYTES=11530000
+      - KAFKA_ZOOKEEPER_CONNECT=z0.foo.org:2181,z1.foo.org:2181,z2.foo.org:2181
+
+  k3.foo.org:
+    container_name: k3.foo.org
+    image: hyperledger/fabric-kafka:${THIRDPARTY_VERSION}
+    networks:
+      - lecturen
+    environment:
+      - KAFKA_BROKER_ID=3
+      - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
+      - KAFKA_MIN_INSYNC_REPLICAS=2
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=3
+      - KAFKA_MESSAGE_MAX_BYTES=11530000
+      - KAFKA_REPLICA_FETCH_MAX_BYTES=11530000
+      - KAFKA_ZOOKEEPER_CONNECT=z0.foo.org:2181,z1.foo.org:2181,z2.foo.org:2181
+
+  o0.foo.org:
+    container_name: o0.foo.org
+    image: hyperledger/fabric-orderer:${HYPERLEDGER_VERSION}
+    networks:
+      - lecturen
+    volumes:
+      - ../artifact/block.lecturesystemc.0:/srv/hyperledger/block.lecturesystemc.0
+      - ../crypto/ordererOrganizations/foo.org/orderers/o0.foo.org:/srv/hyperledger/msp
+      - ./orderer.yaml:/etc/hyperledger/fabric/orderer.yaml
+
+  o1.foo.org:
+    container_name: o1.foo.org
+    image: hyperledger/fabric-orderer:${HYPERLEDGER_VERSION}
+    networks:
+      - lecturen
+    volumes:
+      - ../artifact/block.lecturesystemc.0:/srv/hyperledger/block.lecturesystemc.0
+      - ../crypto/ordererOrganizations/foo.org/orderers/o1.foo.org:/srv/hyperledger/msp
+      - ./orderer.yaml:/etc/hyperledger/fabric/orderer.yaml
+
+  ca.abc.com:
+    container_name: ca.abc.com
+    image: hyperledger/fabric-ca:${HYPERLEDGER_VERSION}
+    networks:
+      - lecturen
+    environment:
+      - FABRIC_CA_HOME=/srv/ca
+      - FABRIC_CA_SERVER_CA_NAME=ca.abc.com
+      - FABRIC_CA_SERVER_CA_CERTFILE=/srv/ca/key
+      - FABRIC_CA_SERVER_CA_KEYFILE=/srv/ca/cert.pem
+    volumes:
+      - ./fabric-ca-server-config.yaml:/srv/ca/fabric-ca-server-config.yaml
+      - ../crypto/peerOrganizations/abc.com/ca/8c5abf08907d60200e427b43bd419a3b78e5853b1c0b0e532157cce901c6f4ac_sk:/srv/ca/key
+      - ../crypto/peerOrganizations/abc.com/ca/ca.abc.com-cert.pem:/srv/ca/cert.pem
+
+  admin.abc.com:
+    container_name: admin.abc.com
+    image: hyperledger/fabric-tools:${HYPERLEDGER_VERSION}
+    networks:
+      - lecturen
+    volumes:
+      - ../crypto/peerOrganizations/abc.com/users/Admin@abc.com:/srv/msp
+      - ../artifact:/srv/artifact
+    environment:
+      - CORE_PEER_ADDRESS=p0.abc.com:7051
+      - CORE_PEER_LOCALMSPID=ABCOrg
+      - CORE_PEER_MSPCONFIGPATH=/srv/msp/msp
+    command: tail -f /dev/null
+
+  p0.abc.com:
+    container_name: p0.abc.com
+    image: hyperledger/fabric-peer:${HYPERLEDGER_VERSION}
+    networks:
+      - lecturen
+    volumes:
+      - ../crypto/peerOrganizations/abc.com/peers/p0.abc.com:/srv/msp
+      - ./core.yaml:/etc/hyperledger/fabric/core.yaml
+    environment:
+      - CORE_PEER_ID=p0.abc.com
+      - CORE_PEER_NETWORKID=uwu
+      - CORE_PEER_CHAINCODELISTENADDRESS=p0.abc.com:7052
+      - CORE_PEER_GOSSIP_BOOTSTRAP=p1.abc.com:7051
+      - CORE_PEER_ADDRESS=p0.abc.com:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=p0.abc.com:7051
+      - CORE_PEER_LOCALMSPID=ABCOrg
+      - CORE_PEER_MSPCONFIGPATH=/srv/msp/msp
+
+  p1.abc.com:
+    container_name: p1.abc.com
+    image: hyperledger/fabric-peer:${HYPERLEDGER_VERSION}
+    networks:
+      - lecturen
+    volumes:
+      - ../crypto/peerOrganizations/abc.com/peers/p1.abc.com:/srv/msp
+      - ./core.yaml:/etc/hyperledger/fabric/core.yaml
+    environment:
+      - CORE_PEER_ID=p1.abc.com
+      - CORE_PEER_NETWORKID=uwu
+      - CORE_PEER_CHAINCODELISTENADDRESS=p1.abc.com:7052
+      - CORE_PEER_GOSSIP_BOOTSTRAP=p0.abc.com:7051
+      - CORE_PEER_ADDRESS=p1.abc.com:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=p1.abc.com:7051
+      - CORE_PEER_LOCALMSPID=ABCOrg
+      - CORE_PEER_MSPCONFIGPATH=/srv/msp/msp
+
+  ca.xyz.com:
+    container_name: ca.xyz.com
+    image: hyperledger/fabric-ca:${HYPERLEDGER_VERSION}
+    networks:
+      - lecturen
+    environment:
+      - FABRIC_CA_HOME=/srv/ca
+      - FABRIC_CA_SERVER_CA_NAME=ca.xyz.com
+      - FABRIC_CA_SERVER_CA_CERTFILE=/srv/ca/key
+      - FABRIC_CA_SERVER_CA_KEYFILE=/srv/ca/cert.pem
+    volumes:
+      - ./fabric-ca-server-config.yaml:/srv/ca/fabric-ca-server-config.yaml
+      - ../crypto/peerOrganizations/xyz.com/ca/3c323e799a33e4210dee67713e3fd091488f85332e70700b89e581f97c0150c2_sk:/srv/ca/key
+      - ../crypto/peerOrganizations/xyz.com/ca/ca.xyz.com-cert.pem:/srv/ca/cert.pem
+
+  admin.xyz.com:
+    container_name: admin.xyz.com
+    image: hyperledger/fabric-tools:${HYPERLEDGER_VERSION}
+    networks:
+      - lecturen
+    volumes:
+      - ../crypto/peerOrganizations/xyz.com/users/Admin@xyz.com:/srv/msp
+      - ../artifact:/srv/artifact
+    environment:
+      - CORE_PEER_ADDRESS=p0.xyz.com:7051
+      - CORE_PEER_LOCALMSPID=XYZOrg
+      - CORE_PEER_MSPCONFIGPATH=/srv/msp/msp
+    command: tail -f /dev/null
+
+  p0.xyz.com:
+    container_name: p0.xyz.com
+    image: hyperledger/fabric-peer:${HYPERLEDGER_VERSION}
+    networks:
+      - lecturen
+    volumes:
+      - ../crypto/peerOrganizations/xyz.com/peers/p0.xyz.com:/srv/msp
+      - ./core.yaml:/etc/hyperledger/fabric/core.yaml
+    environment:
+      - CORE_PEER_ID=p0.xyz.com
+      - CORE_PEER_NETWORKID=uwu
+      - CORE_PEER_CHAINCODELISTENADDRESS=p0.xyz.com:7052
+      - CORE_PEER_GOSSIP_BOOTSTRAP=p1.xyz.com:7051
+      - CORE_PEER_ADDRESS=p0.xyz.com:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=p0.xyz.com:7051
+      - CORE_PEER_LOCALMSPID=XYZOrg
+      - CORE_PEER_MSPCONFIGPATH=/srv/msp/msp
+
+  p1.xyz.com:
+    container_name: p1.xyz.com
+    image: hyperledger/fabric-peer:${HYPERLEDGER_VERSION}
+    networks:
+      - lecturen
+    volumes:
+      - ../crypto/peerOrganizations/xyz.com/peers/p1.xyz.com:/srv/msp
+      - ./core.yaml:/etc/hyperledger/fabric/core.yaml
+    environment:
+      - CORE_PEER_ID=p1.xyz.com
+      - CORE_PEER_NETWORKID=uwu
+      - CORE_PEER_CHAINCODELISTENADDRESS=p1.xyz.com:7052
+      - CORE_PEER_GOSSIP_BOOTSTRAP=p0.xyz.com:7051
+      - CORE_PEER_ADDRESS=p1.xyz.com:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=p1.xyz.com:7051
+      - CORE_PEER_LOCALMSPID=XYZOrg
+      - CORE_PEER_MSPCONFIGPATH=/srv/msp/msp
+
+  ca.ijk.com:
+    container_name: ca.ijk.com
+    image: hyperledger/fabric-ca:${HYPERLEDGER_VERSION}
+    networks:
+      - lecturen
+    environment:
+      - FABRIC_CA_HOME=/srv/ca
+      - FABRIC_CA_SERVER_CA_NAME=ca.ijk.com
+      - FABRIC_CA_SERVER_CA_CERTFILE=/srv/ca/key
+      - FABRIC_CA_SERVER_CA_KEYFILE=/srv/ca/cert.pem
+    volumes:
+      - ./fabric-ca-server-config.yaml:/srv/ca/fabric-ca-server-config.yaml
+      - ../crypto/peerOrganizations/ijk.com/ca/dc8c8a09b0b2700158cb7c1a5cde61b14e61b3b7ae1208bf7dee07c8185fd3ac_sk:/srv/ca/key
+      - ../crypto/peerOrganizations/ijk.com/ca/ca.ijk.com-cert.pem:/srv/ca/cert.pem
+
+  admin.ijk.com:
+    container_name: admin.ijk.com
+    image: hyperledger/fabric-tools:${HYPERLEDGER_VERSION}
+    networks:
+      - lecturen
+    volumes:
+      - ../crypto/peerOrganizations/ijk.com/users/Admin@ijk.com:/srv/msp
+      - ../artifact:/srv/artifact
+    environment:
+      - CORE_PEER_ADDRESS=p0.ijk.com:7051
+      - CORE_PEER_LOCALMSPID=IJKOrg
+      - CORE_PEER_MSPCONFIGPATH=/srv/msp/msp
+    command: tail -f /dev/null
+
+  p0.ijk.com:
+    container_name: p0.ijk.com
+    image: hyperledger/fabric-peer:${HYPERLEDGER_VERSION}
+    networks:
+      - lecturen
+    volumes:
+      - ../crypto/peerOrganizations/ijk.com/peers/p0.ijk.com:/srv/msp
+      - ./core.yaml:/etc/hyperledger/fabric/core.yaml
+    environment:
+      - CORE_PEER_ID=p0.ijk.com
+      - CORE_PEER_NETWORKID=uwu
+      - CORE_PEER_CHAINCODELISTENADDRESS=p0.ijk.com:7052
+      - CORE_PEER_GOSSIP_BOOTSTRAP=p1.ijk.com:7051
+      - CORE_PEER_ADDRESS=p0.ijk.com:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=p0.ijk.com:7051
+      - CORE_PEER_LOCALMSPID=IJKOrg
+      - CORE_PEER_MSPCONFIGPATH=/srv/msp/msp
+
+  p1.ijk.com:
+    container_name: p1.ijk.com
+    image: hyperledger/fabric-peer:${HYPERLEDGER_VERSION}
+    networks:
+      - lecturen
+    volumes:
+      - ../crypto/peerOrganizations/ijk.com/peers/p1.ijk.com:/srv/msp
+      - ./core.yaml:/etc/hyperledger/fabric/core.yaml
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 9443:9443
+    environment:
+      - CORE_PEER_ID=p1.ijk.com
+      - CORE_PEER_NETWORKID=uwu
+      - CORE_PEER_CHAINCODELISTENADDRESS=p1.ijk.com:7052
+      - CORE_PEER_GOSSIP_BOOTSTRAP=p0.ijk.com:7051
+      - CORE_PEER_ADDRESS=p1.ijk.com:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=p1.ijk.com:7051
+      - CORE_PEER_LOCALMSPID=IJKOrg
+      - CORE_PEER_MSPCONFIGPATH=/srv/msp/msp
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=db.p1.ijk.com:5984
+      - CORE_METRICS_PROVIDER=prometheus
+      - CORE_OPERATIONS_LISTENADDRESS=0.0.0.0:9443
+
+  db.p1.ijk.com:
+    container_name: db.p1.ijk.com
+    image: hyperledger/fabric-couchdb:${THIRDPARTY_VERSION}
+    networks:
+      - lecturen
+
+  hello.bank:
+    container_name: hello.bank
+    image: northkillz/mocking-server:1.0.0
+    networks:
+      - lecturen
