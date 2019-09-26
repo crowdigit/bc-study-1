@@ -106,8 +106,8 @@ class Market extends Contract {
     }
 
     async buy(context, buyer_id, seller_id, item_seq) {
-        const buyer_private = JSON.parse((await context.stub.invokeChaincode('accountc', ['get_user', buyer_id], 'myc')).payload.toBuffer());
-        const seller_private = JSON.parse((await context.stub.invokeChaincode('accountc', ['get_user', seller_id], 'myc')).payload.toBuffer());
+        const buyer_private = JSON.parse((await context.stub.invokeChaincode('accountcc', ['get_user', buyer_id], 'accountc')).payload.toBuffer());
+        const seller_private = JSON.parse((await context.stub.invokeChaincode('accountcc', ['get_user', seller_id], 'accountc')).payload.toBuffer());
         const product = JSON.parse(await this.get_product(context, seller_id, item_seq));
         const buyer = JSON.parse(await this.get_buyer(context, buyer_id));
 
