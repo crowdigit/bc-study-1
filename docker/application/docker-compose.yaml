@@ -1,0 +1,18 @@
+version: "3"
+
+networks:
+  docker_lecturen:
+    external: true
+
+services:
+  application:
+    container_name: app
+    image: application:1.0.0
+    networks:
+      - docker_lecturen
+    volumes:
+      - ../../crypto:/srv/application/crypto
+      - ./wallet:/srv/application/wallet
+    # first run
+    command: node ./setup.js
+    # command: node ./run.js

@@ -1,0 +1,164 @@
+name: "Network"
+version: "1.0"
+
+client:
+  credentialStore:
+    path: "/tmp/hfc-kvs"
+    cryptoStore:
+      path: "/tmp/hfc-cvs"
+
+channels:
+  pibsc:
+    orderers:
+      - o0.foo.org
+      - o1.foo.org
+
+    peers:
+      p0.abc.com:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+      p1.abc.com:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+
+      p0.xyz.com:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+      p1.xyz.com:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+
+      p0.ijk.com:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+      p1.ijk.com:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+
+organizations:
+  Org1:
+    mspid: ABCOrg
+    peers:
+      - p0.abc.com
+      - p1.abc.com
+    certificateAuthorities:
+      - ca.abc.com
+        # adminPrivateKey:
+        # path: crypto/peerOrganizations/abc.com/users/Admin@abc.com/msp/keystore/b88eff6d4b1893bf1a5b95ccea9159278f127f4e3d33a329a3c8fffcf6c62f1d_sk
+        # signedCert:
+        # path: crypto/peerOrganizations/abc.com/users/Admin@abc.com/msp/signcerts/Admin@abc.com-cert.pem
+
+  Org2:
+    mspid: XYZOrg
+    peers:
+      - p0.xyz.com
+      - p1.xyz.com
+    certificateAuthorities:
+      - ca.xyz.com
+        # adminPrivateKey:
+        # path: crypto/peerOrganizations/xyz.com/users/Admin@xyz.com/msp/keystore/de02d0438afd59982eae1a16f198c9441f549b2288dbd5d01b3088a9d717c333_sk
+        # signedCert:
+        # path: crypto/peerOrganizations/xyz.com/users/Admin@xyz.com/msp/signcerts/Admin@xyz.com-cert.pem
+
+  Org3:
+    mspid: IJKOrg
+    peers:
+      - p0.ijk.com
+      - p1.ijk.com
+    certificateAuthorities:
+      - ca.ijk.com
+        # adminPrivateKey:
+        # path: crypto/peerOrganizations/ijk.com/users/Admin@ijk.com/msp/keystore/7e7deb90fe7ec5de66abb90abbaaac1c4f2659c822049a3c6d3c4ba4957a6935_sk
+        # signedCert:
+        # path: crypto/peerOrganizations/ijk.com/users/Admin@ijk.com/msp/signcerts/Admin@ijk.com-cert.pem
+
+orderers:
+  o0.foo.org:
+    url: grpc://o0.foo.org:7050
+    grpcOptions:
+      ssl-target-name-override: o0.foo.org
+      tlsCACerts: crypto/ordererOrganizations/foo.org/orderers/o0.foo.org/msp/tlscacerts/tlsca.foo.org-cert.pem
+
+  o1.foo.org:
+    url: grpc://o1.foo.org:7050
+    grpcOptions:
+      ssl-target-name-override: o1.foo.org
+      tlsCACerts: crypto/ordererOrganizations/foo.org/orderers/o1.foo.org/msp/tlscacerts/tlsca.foo.org-cert.pem
+
+peers:
+  p0.abc.com:
+    url: grpc://p0.abc.com:7051
+    grpcOptions:
+      ssl-target-name-override: p0.abc.com
+    tlsCACerts: crypto/peerOrganizations/abc.com/peers/p0.abc.com/msp/tlscacerts/tlsca.abc.com-cert.pem
+  p1.abc.com:
+    url: grpc://p1.abc.com:7051
+    grpcOptions:
+      ssl-target-name-override: p1.abc.com
+    tlsCACerts: crypto/peerOrganizations/abc.com/peers/p1.abc.com/msp/tlscacerts/tlsca.abc.com-cert.pem
+
+  p0.xyz.com:
+    url: grpc://p0.xyz.com:7051
+    grpcOptions:
+      ssl-target-name-override: p0.xyz.com
+    tlsCACerts: crypto/peerOrganizations/xyz.com/peers/p0.xyz.com/msp/tlscacerts/tlsca.xyz.com-cert.pem
+  p1.xyz.com:
+    url: grpc://p1.xyz.com:7051
+    grpcOptions:
+      ssl-target-name-override: p1.xyz.com
+    tlsCACerts: crypto/peerOrganizations/xyz.com/peers/p1.xyz.com/msp/tlscacerts/tlsca.xyz.com-cert.pem
+
+  p0.ijk.com:
+    url: grpc://p0.ijk.com:7051
+    grpcOptions:
+      ssl-target-name-override: p0.ijk.com
+    tlsCACerts: crypto/peerOrganizations/ijk.com/peers/p0.ijk.com/msp/tlscacerts/tlsca.ijk.com-cert.pem
+  p1.ijk.com:
+    url: grpc://p1.ijk.com:7051
+    grpcOptions:
+      ssl-target-name-override: p1.ijk.com
+    tlsCACerts: crypto/peerOrganizations/ijk.com/peers/p1.ijk.com/msp/tlscacerts/tlsca.ijk.com-cert.pem
+
+certificateAuthorities:
+  ca.abc.com:
+    url: http://ca.abc.com:7054
+    httpOptions:
+      verify: false
+    tlsCACerts: crypto/peerOrganizations/abc.com/ca/ca.abc.com-cert.pem
+    registrar:
+      - enrollId: admin
+        enrollSecret: adminpw
+    caName: ca.abc.com
+
+  ca.xyz.com:
+    url: http://ca.xyz.com:7054
+    httpOptions:
+      verify: false
+    tlsCACerts:
+      path: crypto/peerOrganizations/xyz.com/ca/ca.xyz.com-cert.pem
+    registrar:
+      - enrollId: admin
+        enrollSecret: adminpw
+    caName: ca.xyz.com
+
+  ca.ijk.com:
+    url: http://ca.ijk.com:7054
+    httpOptions:
+      verify: false
+    tlsCACerts: crypto/peerOrganizations/ijk.com/ca/ca.ijk.com-cert.pem
+    registrar:
+      - enrollId: admin
+        enrollSecret: adminpw
+    caName: ca.ijk.com

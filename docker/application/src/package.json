@@ -1,0 +1,12 @@
+{
+  "name": "application",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "fabric-ca-client": "^1.4.4",
+    "fabric-network": "^1.4.4"
+  }
+}

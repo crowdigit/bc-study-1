@@ -1,0 +1,26 @@
+name: "Network"
+version: "1.0"
+
+client:
+  organization: ABCOrg
+  credentialStore:
+    path: "/tmp/hfc-kvs"
+    cryptoStore:
+      path: "/tmp/hfc-cvs"
+
+organizations:
+  ABCOrg:
+    mspid: ABCOrg
+    peers:
+      - p0.abc.com
+      - p1.abc.com
+    certificateAuthorities:
+      - ca.abc.com
+
+certificateAuthorities:
+  ca.abc.com:
+    url: http://ca.abc.com:7054
+    httpOptions:
+      verify: false
+    tlsCACerts: crypto/peerOrganizations/abc.com/ca/ca.abc.com-cert.pem
+    caName: ca.abc.com
