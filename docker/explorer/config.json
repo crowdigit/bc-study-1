@@ -1,0 +1,9 @@
+{
+    "network-configs": {
+        "lecture-network": {
+            "name": "lecture-network",
+            "profile": "./connection-profile/lecture-network.json"
+        }
+    },
+    "license": "Apache-2.0"
+}

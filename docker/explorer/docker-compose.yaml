@@ -1,0 +1,36 @@
+version: "3"
+
+networks:
+  docker_lecturen:
+    external: true
+
+services:
+  explorer.abc.com:
+    container_name: explorer.abc.com
+    image: hyperledger/explorer
+    volumes:
+      - ./config.json:/opt/explorer/app/platform/fabric/config.json
+      - ./connection-profile:/opt/explorer/app/platform/fabric/connection-profile
+      - ../../crypto:/tmp/crypto
+    environment:
+      - DATABASE_HOST=db.explorer.abc.com
+      - DATABASE_USERNAME=hppoc
+      - DATABASE_PASSWD=password
+      - DISCOVERY_AS_LOCALHOST=false
+    command: sh -c "sleep 16&& node /opt/explorer/main.js && tail -f /dev/null"
+    ports:
+      - 8090:8080
+    networks:
+      - docker_lecturen
+
+  db.explorer.abc.com:
+    container_name: db.explorer.abc.com
+    image: hyperledger/explorer-db
+    environment:
+      - DATABASE_DATABASE=fabricexplorer
+      - DATABASE_USERNAME=hppoc
+      - DATABASE_PASSWORD=password
+    volumes:
+      - ./createdb.sh:/docker-entrypoint-initdb.d/createdb.sh
+    networks:
+      - docker_lecturen

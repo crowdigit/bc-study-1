@@ -1,0 +1,134 @@
+{
+    "name": "lecture-network",
+    "version": "1.0.0",
+    "client": {
+        "tlsEnable": false,
+        "adminUser": "admin",
+        "adminPassword": "adminpw",
+        "enableAuthentication": false,
+        "organization": "ABCOrg",
+        "connection": {
+            "timeout": {
+                "peer": {
+                    "endorser": "300"
+                },
+                "orderer": "300"
+            }
+        }
+    },
+    "channels": {
+        "accountc": {
+            "peers": {
+                "p0.abc.com": {},
+                "p1.abc.com": {},
+                "p0.ijk.com": {},
+                "p1.ijk.com": {},
+                "p0.xyz.com": {},
+                "p1.xyz.com": {}
+            },
+            "connection": {
+                "timeout": {
+                    "peer": {
+                        "endorser": "6000",
+                        "eventHub": "6000",
+                        "eventReg": "6000"
+                    }
+                }
+            }
+        }
+    },
+    "organizations": {
+        "ABCOrg": {
+            "mspid": "ABCOrg",
+            "fullpath": true,
+            "adminPrivateKey": {
+                "path": "/tmp/crypto/peerOrganizations/abc.com/users/Admin@abc.com/msp/keystore/c583df296d90c49d476e132fde7af3c2c90f9489f6813c896bcf17a05ad1564a_sk"
+            },
+            "signedCert": {
+                "path": "/tmp/crypto/peerOrganizations/abc.com/users/Admin@abc.com/msp/signcerts/Admin@abc.com-cert.pem"
+            }
+        },
+        "IJKOrg": {
+            "mspid": "IJKOrg",
+            "fullpath": true,
+            "adminPrivateKey": {
+                "path": "/tmp/crypto/peerOrganizations/ijk.com/users/Admin@ijk.com/msp/keystore/efbcdf7a2b4cca24478be6483d5879d91d2043371b4518c605d85cc844f240e6_sk"
+            },
+            "signedCert": {
+                "path": "/tmp/crypto/peerOrganizations/ijk.com/users/Admin@ijk.com/msp/signcerts/Admin@ijk.com-cert.pem"
+            }
+        },
+        "XYZOrg": {
+            "mspid": "XYZOrg",
+            "fullpath": true,
+            "adminPrivateKey": {
+                "path": "/tmp/crypto/peerOrganizations/xyz.com/users/Admin@xyz.com/msp/keystore/a8ab2ef496da14f2dfb8f3c6180d6c2d28c349285251a2f859e94db4755eb0e7_sk"
+            },
+            "signedCert": {
+                "path": "/tmp/crypto/peerOrganizations/xyz.com/users/Admin@xyz.com/msp/signcerts/Admin@xyz.com-cert.pem"
+            }
+        }
+    },
+    "peers": {
+        "p0.abc.com": {
+            "tlsCACerts": {
+                "path": "/tmp/crypto/peerOrganizations/abc.com/peers/p0.abc.com/tls/ca.crt"
+            },
+            "url": "grpc://p0.abc.com:7051",
+            "eventUrl": "grpc://p0.abc.com:7053",
+            "grpcOptions": {
+                "ssl-target-name-override": "p0.abc.com"
+            }
+        },
+        "p1.abc.com": {
+            "tlsCACerts": {
+                "path": "/tmp/crypto/peerOrganizations/abc.com/peers/p1.abc.com/tls/ca.crt"
+            },
+            "url": "grpc://p1.abc.com:7051",
+            "eventUrl": "grpc://p1.abc.com:7053",
+            "grpcOptions": {
+                "ssl-target-name-override": "p1.abc.com"
+            }
+        },
+        "p0.ijk.com": {
+            "tlsCACerts": {
+                "path": "/tmp/crypto/peerOrganizations/ijk.com/peers/p0.ijk.com/tls/ca.crt"
+            },
+            "url": "grpc://p0.ijk.com:7051",
+            "eventUrl": "grpc://p0.ijk.com:7053",
+            "grpcOptions": {
+                "ssl-target-name-override": "p0.ijk.com"
+            }
+        },
+        "p1.ijk.com": {
+            "tlsCACerts": {
+                "path": "/tmp/crypto/peerOrganizations/ijk.com/peers/p1.ijk.com/tls/ca.crt"
+            },
+            "url": "grpc://p1.ijk.com:7051",
+            "eventUrl": "grpc://p1.ijk.com:7053",
+            "grpcOptions": {
+                "ssl-target-name-override": "p1.ijk.com"
+            }
+        },
+        "p0.xyz.com": {
+            "tlsCACerts": {
+                "path": "/tmp/crypto/peerOrganizations/xyz.com/peers/p0.xyz.com/tls/ca.crt"
+            },
+            "url": "grpc://p0.xyz.com:7051",
+            "eventUrl": "grpc://p0.xyz.com:7053",
+            "grpcOptions": {
+                "ssl-target-name-override": "p0.xyz.com"
+            }
+        },
+        "p1.xyz.com": {
+            "tlsCACerts": {
+                "path": "/tmp/crypto/peerOrganizations/xyz.com/peers/p1.xyz.com/tls/ca.crt"
+            },
+            "url": "grpc://p1.xyz.com:7051",
+            "eventUrl": "grpc://p1.xyz.com:7053",
+            "grpcOptions": {
+                "ssl-target-name-override": "p1.xyz.com"
+            }
+        }
+    }
+}
