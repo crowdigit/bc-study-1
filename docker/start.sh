@@ -11,6 +11,5 @@ sleep 3
 
 docker-compose up -d db.p1.ijk.com
 docker-compose up -d p0.abc.com p1.abc.com p0.xyz.com p1.xyz.com p0.ijk.com p1.ijk.com 
-docker-compose up -d admin.abc.com admin.xyz.com admin.ijk.com
-docker-compose up -d hello.bank
+docker-compose up -d admin.abc.com admin.xyz.com admin.ijk.com hello.bank ca.abc.com ca.xyz.com ca.ijk.com
 sleep 3
