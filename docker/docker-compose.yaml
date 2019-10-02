@@ -320,6 +320,24 @@ services:
       - CORE_METRICS_PROVIDER=prometheus
       - CORE_OPERATIONS_LISTENADDRESS=0.0.0.0:9443
 
+  prom.p1.ijk.com:
+    container_name: prom.p1.ijk.com
+    image: prom/prometheus:latest
+    ports:
+      - 9090:9090
+    networks:
+      - lecturen
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+
+  grafana.p1.ijk.com:
+    container_name: grafana.p1.ijk.com
+    image: grafana/grafana
+    networks:
+      - lecturen
+    ports:
+      - 3000:3000
+
   db.p1.ijk.com:
     container_name: db.p1.ijk.com
     image: hyperledger/fabric-couchdb:${THIRDPARTY_VERSION}
