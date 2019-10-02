@@ -7,7 +7,7 @@ networks:
 services:
   application:
     container_name: app
-    image: application:1.0.0
+    image: northkillz/application:1.0.0
     networks:
       - docker_lecturen
     volumes:
