@@ -13,6 +13,4 @@ services:
     volumes:
       - ../../crypto:/srv/application/crypto
       - ./wallet:/srv/application/wallet
-    # first run
-    command: node ./setup.js
-    # command: node ./run.js
+    command: sh -c "node ./setup.js && node ./run.js"
