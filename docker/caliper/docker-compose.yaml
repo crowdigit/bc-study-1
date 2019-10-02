@@ -1,0 +1,20 @@
+version: "3"
+
+networks:
+  docker_lecturen:
+    external: true
+
+services:
+  caliper.lecture.org:
+    container_name: caliper.lecture.org
+    image: hyperledger/caliper:0.1.0
+    environment:
+      - CALIPER_BIND_SUT=fabric
+      - CALIPER_BIND_SDK=1.4.1
+      - CALIPER_BENCHCONFIG=./config.bench.yaml
+      - CALIPER_NETWORKCONFIG=./config.network.yaml
+    volumes:
+      - ./workspace:/hyperledger/caliper/workspace
+      - ../../crypto:/srv/crypto
+    networks:
+      - docker_lecturen

@@ -1,0 +1,204 @@
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+name: Fabric
+version: "1.0"
+mutual-tls: false
+
+caliper:
+  blockchain: fabric
+  command:
+    # start: docker-compose -f network/fabric-v1.4.1/2org1peergoleveldb/docker-compose.yaml up -d;sleep 3s
+    start: echo "starting benchmark"
+    end: echo "benchmark ended"
+
+info:
+  Version: 1.4.1
+  Size: 3 Orgs with 2 Peer
+  Orderer: Kafka,
+  Distribution: Single Host
+  StateDB: GoLevelDB
+
+clients:
+  c0.abc.com:
+    client:
+      organization: Org1
+      credentialStore:
+        path: /tmp/hfc-kvs/abc
+        cryptoStore:
+          path: /tmp/hfc-cvs/abc
+      clientPrivateKey:
+        path: /srv/crypto/peerOrganizations/abc.com/users/User1@abc.com/msp/keystore/b88eff6d4b1893bf1a5b95ccea9159278f127f4e3d33a329a3c8fffcf6c62f1d_sk
+      clientSignedCert:
+        path: /srv/crypto/peerOrganizations/abc.com/users/User1@abc.com/msp/signcerts/User1@abc.com-cert.pem
+
+  c0.ijk.com:
+    client:
+      organization: Org2
+      credentialStore:
+        path: /tmp/hfc-kvs/ijk
+        cryptoStore:
+          path: /tmp/hfc-cvs/ijk
+      clientPrivateKey:
+        path: /srv/crypto/peerOrganizations/ijk.com/users/User1@ijk.com/msp/keystore/7e7deb90fe7ec5de66abb90abbaaac1c4f2659c822049a3c6d3c4ba4957a6935_sk
+      clientSignedCert:
+        path: /srv/crypto/peerOrganizations/ijk.com/users/User1@ijk.com/msp/signcerts/User1@ijk.com-cert.pem
+
+  c0.xyz.com:
+    client:
+      organization: Org3
+      credentialStore:
+        path: /tmp/hfc-kvs/xyz
+        cryptoStore:
+          path: /tmp/hfc-cvs/xyz
+      clientPrivateKey:
+        path: /srv/crypto/peerOrganizations/xyz.com/users/User1@xyz.com/msp/keystore/de02d0438afd59982eae1a16f198c9441f549b2288dbd5d01b3088a9d717c333_sk
+      clientSignedCert:
+        path: /srv/crypto/peerOrganizations/xyz.com/users/User1@xyz.com/msp/signcerts/User1@xyz.com-cert.pem
+
+channels:
+  accountc:
+    created: true
+    definition:
+        capabilities: []
+        consortium: 'LectureConsortium'
+        msps: ['ABCOrg', 'IJKOrg', 'XYZOrg']
+        version: 0
+    orderers:
+    - o0.foo.org
+    - o1.foo.org
+    peers:
+      p0.abc.com:
+        endorsingPeer: true
+      p1.abc.com:
+        endorsingPeer: true
+      p0.ijk.com:
+        endorsingPeer: true
+      p1.ijk.com:
+        endorsingPeer: true
+      p0.xyz.com:
+        endorsingPeer: true
+      p1.xyz.com:
+        endorsingPeer: true
+
+    chaincodes:
+    - id: accountcc
+      version: "0"
+      language: node
+      path: src/contract/fabric/marbles/node
+      metadataPath: src/contract/fabric/marbles/node/metadata
+
+organizations:
+  Org1:
+    mspid: ABCOrg
+    peers:
+    - p0.abc.com
+    - p1.abc.com
+    certificateAuthorities:
+    - ca.abc.com
+    adminPrivateKey:
+      path: /srv/crypto/peerOrganizations/abc.com/users/Admin@abc.com/msp/keystore/c583df296d90c49d476e132fde7af3c2c90f9489f6813c896bcf17a05ad1564a_sk
+    signedCert:
+      path: /srv/crypto/peerOrganizations/abc.com/users/Admin@abc.com/msp/signcerts/Admin@abc.com-cert.pem
+
+  Org2:
+    mspid: IJKOrg
+    peers:
+    - p0.ijk.com
+    - p1.ijk.com
+    certificateAuthorities:
+    - ca.ijk.com
+    adminPrivateKey:
+      path: /srv/crypto/peerOrganizations/ijk.com/users/Admin@ijk.com/msp/keystore/efbcdf7a2b4cca24478be6483d5879d91d2043371b4518c605d85cc844f240e6_sk
+    signedCert:
+      path: /srv/crypto/peerOrganizations/ijk.com/users/Admin@ijk.com/msp/signcerts/Admin@ijk.com-cert.pem
+
+  Org3:
+    mspid: XYZOrg
+    peers:
+    - p0.xyz.com
+    - p1.xyz.com
+    certificateAuthorities:
+    - ca.xyz.com
+    adminPrivateKey:
+      path: /srv/crypto/peerOrganizations/xyz.com/users/Admin@xyz.com/msp/keystore/a8ab2ef496da14f2dfb8f3c6180d6c2d28c349285251a2f859e94db4755eb0e7_sk
+    signedCert:
+      path: /srv/crypto/peerOrganizations/xyz.com/users/Admin@xyz.com/msp/signcerts/Admin@xyz.com-cert.pem
+
+orderers:
+  o0.foo.org:
+    url: grpc://o0.foo.org:7050
+    grpcOptions:
+      ssl-target-name-override: o0.foo.org
+  o1.foo.org:
+    url: grpc://o1.foo.org:7050
+    grpcOptions:
+      ssl-target-name-override: o1.foo.org
+
+peers:
+  p0.abc.com:
+    url: grpc://p0.abc.com:7051
+    grpcOptions:
+      ssl-target-name-override: p0.abc.com
+      grpc.keepalive_time_ms: 600000
+  p1.abc.com:
+    url: grpc://p1.abc.com:7051
+    grpcOptions:
+      ssl-target-name-override: p1.abc.com
+      grpc.keepalive_time_ms: 600000
+
+  p0.ijk.com:
+    url: grpc://p0.ijk.com:7051
+    grpcOptions:
+      ssl-target-name-override: p0.ijk.com
+      grpc.keepalive_time_ms: 600000
+  p1.ijk.com:
+    url: grpc://p1.ijk.com:7051
+    grpcOptions:
+      ssl-target-name-override: p1.ijk.com
+      grpc.keepalive_time_ms: 600000
+
+  p0.xyz.com:
+    url: grpc://p0.xyz.com:7051
+    grpcOptions:
+      ssl-target-name-override: p0.xyz.com
+      grpc.keepalive_time_ms: 600000
+  p1.xyz.com:
+    url: grpc://p1.xyz.com:7051
+    grpcOptions:
+      ssl-target-name-override: p1.xyz.com
+      grpc.keepalive_time_ms: 600000
+
+certificateAuthorities:
+  ca.abc.com:
+    url: http://ca.abc.com:7054
+    httpOptions:
+      verify: false
+    registrar:
+    - enrollId: admin
+      enrollSecret: adminpw
+  ca.ijk.com:
+    url: http://ca.ijk.com:7054
+    httpOptions:
+      verify: false
+    registrar:
+    - enrollId: admin
+      enrollSecret: adminpw
+  ca.xyz.com:
+    url: http://ca.xyz.com:7054
+    httpOptions:
+      verify: false
+    registrar:
+    - enrollId: admin
+      enrollSecret: adminpw
