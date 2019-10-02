@@ -8,7 +8,7 @@ client:
       path: "/tmp/hfc-cvs"
 
 channels:
-  pibsc:
+  accountc:
     orderers:
       - o0.foo.org
       - o1.foo.org
